@@ -1,1 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Multi-Room Chat Hub</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      background: linear-gradient(to right, hsl(217, 92%, 46%), hsl(199, 96%, 61%)); /* soft blue gradient */
+      margin: 0; 
+      padding: 20px;
+    }
+    .chat-container { 
+      width: 420px; 
+      margin: 20px auto; 
+      background: hsl(206, 77%, 68%); 
+      padding: 20px; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .rooms { margin-bottom: 10px; }
+    .rooms button { 
+      margin-right: 5px; 
+      padding: 8px 14px; 
+      border: none; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-weight: bold;
+      color: white;
+    }
+    .messages { 
+      height: 220px; 
+      overflow-y: auto; 
+      border: 1px solid #ccc; 
+      padding: 10px; 
+      margin-bottom: 10px; 
+      border-radius: 6px;
+    }
+    .input-area { display: flex; }
+    .input-area input { flex: 1; padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
+    .input-area button { padding: 8px 12px; margin-left: 5px; border: none; border-radius: 6px; background: #6a11cb; color: white; cursor: pointer; }
 
+    /* Room-specific colours */
+    .roomA { background-color: oklab(71.987% 0.08529 0.1451); } /* soft pink */
+    .roomB { background-color: hsl(37, 95%, 51%); } /* light blue */
+    .roomC { background-color: #ead56f; } /* light yellow */
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="rooms">
+      <button style="background:#ff6f61;" onclick="switchRoom('Room A')">Room A</button>
+      <button style="background:#4a90e2;" onclick="switchRoom('Room B')">Room B</button>
+      <button style="background:#f5b700;" onclick="switchRoom('Room C')">Room C</button>
+    </div>
+    <h3 id="room-title">Room A</h3>
+    <div class="messages roomA" id="messages"></div>
+    <div class="input-area">
+      <input type="text" id="msgInput" placeholder="Type a message...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    let currentRoom = "Room A";
+    let chatRooms = {
+      "Room A": [],
+      "Room B": [],
+      "Room C": []
+    };
+    function switchRoom(room) {
+      currentRoom = room;
+      document.getElementById("room-title").innerText = room;
+      const messagesDiv = document.getElementById("messages");
+      messagesDiv.className = "messages"; // reset
+      if(room === "Room A") messagesDiv.classList.add("roomA");
+      if(room === "Room B") messagesDiv.classList.add("roomB");
+      if(room === "Room C") messagesDiv.classList.add("roomC");
+      displayMessages();
+    }
+    function sendMessage() {
+      const input = document.getElementById("msgInput");
+      const text = input.value.trim();
+      if (text !== "") {
+        chatRooms[currentRoom].push(text);
+        input.value = "";
+        displayMessages();
+      }
+    }
+    function displayMessages() {
+      const messagesDiv = document.getElementById("messages");
+      messagesDiv.innerHTML = "";
+      chatRooms[currentRoom].forEach(msg => {
+        const p = document.createElement("p");
+        p.textContent = msg;
+        messagesDiv.appendChild(p);
+      });
+    }
+    // Initialize with Room A messages
+    displayMessages();
+  </script>
+</body>
+</html>
+
+
+    
